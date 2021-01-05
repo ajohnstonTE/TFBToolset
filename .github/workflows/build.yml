@@ -1,9 +1,5 @@
 name: build
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: pull_request
 env:
   TFB_HOME: ~/.tfb
   RUST_BACKTRACE: full
