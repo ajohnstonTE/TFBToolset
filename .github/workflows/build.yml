@@ -1,0 +1,35 @@
+name: build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+env:
+  TFB_HOME: ~/.tfb
+  RUST_BACKTRACE: full
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-11.0]
+        toolchain: [stable]
+        continue-on-error: [false]
+        # "The Rust team appreciates testing against the beta and
+        # nightly channels, even if you are only targeting stable."
+        include:
+          - toolchain: nightly
+            continue-on-error: true
+    continue-on-error: ${{ matrix.continue-on-error }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          override: true
+      - run: |
+        # TODO: Make sure this points to the real FrameworkBenchmarks repo when ready
+        mkdir ~/.tfb
+        git clone https://github.com/TechEmpower/MockFrameworkBenchmarks.git ~/.tfb
+        cargo test -- --nocapture
