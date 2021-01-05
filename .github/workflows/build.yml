@@ -29,3 +29,4 @@ jobs:
         mkdir ~/.tfb
         git clone https://github.com/TechEmpower/MockFrameworkBenchmarks.git ~/.tfb
         cargo test -- --nocapture
+
